@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
-  <link rel="manifest" href="manifest.json">
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>GazCode — Build anything. · GazStudios</title>
@@ -6139,10 +6138,30 @@ footer {
       if (!mod && !e.altKey && e.key === "/" && ta.value[ta.selectionStart - 1] === "<") {
         const { start } = this.getSelection();
         const text = ta.value.slice(0, start - 1);
-        // Find the most recent opening tag
-        const tagMatch = text.match(/<([a-zA-Z][a-zA-Z0-9]*?)(?:\s|>|$)/);
-        if (tagMatch) {
-          const tagName = tagMatch[1];
+        // Find the most recent *unclosed* opening tag (LIFO), not the first one in the file
+        const VOID_TAGS = /^(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)$/;
+        const tagStack = [];
+        const tagRe = /<(\/?)([a-zA-Z][a-zA-Z0-9-]*)(?:\s[^<>]*?)?(\/?)>/g;
+        let tm;
+        while ((tm = tagRe.exec(text))) {
+          const isClosing = tm[1] === "/";
+          const isSelfClosing = tm[3] === "/";
+          const tagName = tm[2].toLowerCase();
+          if (isSelfClosing || VOID_TAGS.test(tagName)) continue;
+          if (isClosing) {
+            // Unwind to the matching opener (tolerate stray/mismatched closers)
+            for (let i = tagStack.length - 1; i >= 0; i--) {
+              if (tagStack[i] === tagName) {
+                tagStack.length = i;
+                break;
+              }
+            }
+          } else {
+            tagStack.push(tagName);
+          }
+        }
+        const tagName = tagStack[tagStack.length - 1];
+        if (tagName) {
           e.preventDefault();
           this.insertText("/" + tagName + ">");
           return;
@@ -11349,16 +11368,6 @@ body {
   void $;
 })();
 
-</script>
-<!-- AFTER (Fixes scope for GitHub Pages subfolder) -->
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js', { scope: './' })
-        .then(reg => console.log('SW registered successfully:', reg.scope))
-        .catch(err => console.error('SW registration failed:', err));
-    });
-  }
 </script>
 </body>
 </html>
