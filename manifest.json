@@ -2,24 +2,30 @@
   "name": "GazCode Studio",
   "short_name": "GazCode",
   "description": "Zero-latency reactive code editor and browser IDE.",
-  "start_url": "/GazCode/",
-  "scope": "/GazCode/",
+  "id": "/GazCode/",
+  "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
-  "orientation": "any",
-  "background_color": "#070810",
-  "theme_color": "#4f46e5",
+  "background_color": "#0a0a0c",
+  "theme_color": "#0a0a0c",
   "icons": [
     {
       "src": "https://jdug83.github.io/ai/icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "https://jdug83.github.io/ai/icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "https://jdug83.github.io/ai/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }
