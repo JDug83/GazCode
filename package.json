@@ -1,0 +1,21 @@
+{
+  "name": "gazcode",
+  "productName": "GazCode",
+  "version": "1.0.0",
+  "description": "GazCode — a code editor with live preview. Build anything.",
+  "main": "main.js",
+  "author": { "name": "GazStudios", "email": "you@example.com" },
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder"
+  },
+  "build": {
+    "appId": "studio.gaz.gazcode",
+    "productName": "GazCode",
+    "files": ["main.js", "preload.js", "index.html", "disk.js"],
+    "linux": { "target": ["AppImage", "deb"], "category": "Development" },
+    "win": { "target": "nsis" },
+    "mac": { "target": "dmg", "category": "public.app-category.developer-tools" }
+  }
+}
